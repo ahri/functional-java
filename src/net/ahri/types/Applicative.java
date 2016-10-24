@@ -2,9 +2,9 @@ package net.ahri.types;
 
 import java.util.function.Function;
 
-public interface Applicative<T>
+public interface Applicative<a>
 {
-    <R extends Functor<T>> R pure(T... vals);
+    <b extends Functor<a>> b pure(a... vals);
 
-    <R> Functor<R> sequentialApply(Functor<Function<T, R>> fs);
+    <b> Functor<b> sequentialApply(Functor<Function<a, b>> f);
 }

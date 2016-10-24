@@ -3,30 +3,30 @@ package net.ahri.types;
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class HaskellConcatList<T> implements Monoid<HaskellConcatList<T>>, Functor<T>, Applicative<T>
+public class HaskellConcatList<a> implements Monoid<HaskellConcatList<a>>, Functor<a>, Applicative<a>, Monad<a>
 {
-    private final T[] list;
+    private final a[] list;
 
-    public HaskellConcatList(T... list)
+    public HaskellConcatList(a... list)
     {
         this.list = list;
     }
 
-    public static <T> HaskellConcatList<T> identity_()
+    public static <a> HaskellConcatList<a> identity_()
     {
-        return new HaskellConcatList<T>();
+        return new HaskellConcatList<a>();
     }
 
     @Override
-    public HaskellConcatList<T> identity() // TODO: is this needed?
+    public HaskellConcatList<a> identity() // TODO: is this needed?
     {
         return identity_();
     }
 
     @Override
-    public HaskellConcatList mappend(HaskellConcatList<T> other)
+    public HaskellConcatList mappend(HaskellConcatList<a> other)
     {
-        T[] concat = Arrays.copyOf(list, list.length + other.list.length);
+        a[] concat = Arrays.copyOf(list, list.length + other.list.length);
         for (int i = 0; i < other.list.length; i++)
         {
             concat[i + list.length] = other.list[i];
@@ -36,21 +36,15 @@ public class HaskellConcatList<T> implements Monoid<HaskellConcatList<T>>, Funct
     }
 
     @Override
-    public <R> Functor<R> fmap(Function<T, R> f)
+    public <b> Functor<b> fmap(Function<a, b> f)
     {
-        R[] work = (R[]) new Object[list.length];
+        b[] work = (b[]) new Object[list.length];
         for (int i = 0; i < list.length; i++)
         {
             work[i] = f.apply(list[i]);
         }
 
-        return new HaskellConcatList<R>(work);
-    }
-
-    @Override
-    public T unwrap()
-    {
-        return list[0];
+        return new HaskellConcatList<b>(work);
     }
 
     @Override
@@ -61,19 +55,19 @@ public class HaskellConcatList<T> implements Monoid<HaskellConcatList<T>>, Funct
                 '}';
     }
 
-    public static <T, R extends Functor<T>> R pure_(T... vals)
+    public static <a, b extends Functor<a>> b pure_(a... vals)
     {
-        return (R) new HaskellConcatList<T>(vals);
+        return (b) new HaskellConcatList<a>(vals);
     }
 
     @Override
-    public <R extends Functor<T>> R pure(T... vals)
+    public <b extends Functor<a>> b pure(a... vals)
     {
         return pure_(vals);
     }
 
     @Override
-    public <R> Functor<R> sequentialApply(Functor<Function<T, R>> fs) // TODO: can move this impl up to HaskellList and inherit
+    public <b> Functor<b> sequentialApply(Functor<Function<a, b>> fs) // TODO: can move this impl up to HaskellList and inherit
     {
         if (!(fs instanceof HaskellConcatList))
         {
@@ -82,19 +76,37 @@ public class HaskellConcatList<T> implements Monoid<HaskellConcatList<T>>, Funct
 
         final HaskellConcatList application = (HaskellConcatList) fs.fmap(f -> this.fmap(v -> f.apply(v)));
 
-        HaskellConcatList<R> tmp = null;
+        HaskellConcatList<b> tmp = null;
         for (int i = 0; i < application.list.length; i++)
         {
             if (i == 0)
             {
-                tmp = (HaskellConcatList<R>) application.list[i];
+                tmp = (HaskellConcatList<b>) application.list[i];
             }
             else
             {
-                tmp = tmp.mappend((HaskellConcatList<R>) application.list[i]);
+                tmp = tmp.mappend((HaskellConcatList<b>) application.list[i]);
             }
         }
 
         return tmp;
+    }
+
+    public static <a, b extends Monad<a>> b return_(a... vals)
+    {
+        return null;
+    }
+
+    @Override
+    public <b> Monad<b> sequentialCompose(Function<a, Monad<b>> f)
+    {
+        Monad<a> tmp = return_();
+
+        for (a item : list)
+        {
+            f.apply(item);
+        }
+
+        return null;
     }
 }

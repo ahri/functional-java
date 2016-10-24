@@ -7,8 +7,8 @@ import net.ahri.types.Sum;
 
 import java.util.function.Function;
 
-public class Main {
-
+public class Main
+{
     public static void main(String[] args)
     {
         // Monoid
@@ -48,5 +48,12 @@ public class Main {
 
         // Monad
         System.out.println("\n=== Monad ===");
+        final HaskellConcatList<Character> lm = HaskellConcatList.return_('a', 'b', 'c');
+        // Sequentially compose two actions, passing any value produced by the first as an argument to the second.
+        System.out.println(String.format(">>=      -  HaskellConcatList.sequentialCompose(x -> new HaskellConcatList(x, x)) = %s", lm.sequentialCompose(x -> new HaskellConcatList<>(x, x))));
+        // Sequentially compose two actions, discarding any value produced by the first, like sequencing operators (such as the semicolon) in imperative languages.
+        //System.out.println(String.format(">>       -  HaskellConcatList.imperativeSequentialCompose('a', 'b', 'c') = %s", la));
+        // Inject a value into the monadic type.
+        //System.out.println(String.format("return   -  HaskellConcatList.return_('a', 'b', 'c') = %s", la));
     }
 }

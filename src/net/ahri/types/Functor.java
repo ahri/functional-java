@@ -2,9 +2,7 @@ package net.ahri.types;
 
 import java.util.function.Function;
 
-public interface Functor<T>
+public interface Functor<a>
 {
-    <R> Functor<R> fmap(Function<T, R> f);
-
-    T unwrap();
+    <b> Functor<b> fmap(Function<a, b> f);
 }

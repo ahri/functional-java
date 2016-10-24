@@ -1,7 +1,7 @@
 package net.ahri.types;
 
-public interface Monoid<T>
+public interface Monoid<a>
 {
-    T identity();
-    T mappend(T other);
+    a identity();
+    a mappend(a other);
 }

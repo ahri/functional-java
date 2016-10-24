@@ -1,5 +1,8 @@
 package net.ahri.types;
 
-public interface Monad<T> //extends Applicative<T>
+import java.util.function.Function;
+
+public interface Monad<a> extends Applicative<a>
 {
+    <b> Monad<b> sequentialCompose(Function<a, Monad<b>> f);
 }
