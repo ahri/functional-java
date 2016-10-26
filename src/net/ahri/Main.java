@@ -50,10 +50,15 @@ public class Main
         System.out.println("\n=== Monad ===");
         final HaskellConcatList<Character> lm = HaskellConcatList.return_('a', 'b', 'c');
         // Sequentially compose two actions, passing any value produced by the first as an argument to the second.
-        System.out.println(String.format(">>=      -  HaskellConcatList.sequentialCompose(x -> new HaskellConcatList(x, x)) = %s", lm.sequentialCompose(x -> new HaskellConcatList<>(x, x))));
+        System.out.println(String.format(">>=f     -  HaskellConcatList.sequentialCompose(x -> new HaskellConcatList(x, x)) = %s", lm.sequentialCompose(x -> new HaskellConcatList<>(x, x))));
         // Sequentially compose two actions, discarding any value produced by the first, like sequencing operators (such as the semicolon) in imperative languages.
         //System.out.println(String.format(">>       -  HaskellConcatList.imperativeSequentialCompose('a', 'b', 'c') = %s", la));
         // Inject a value into the monadic type.
         //System.out.println(String.format("return   -  HaskellConcatList.return_('a', 'b', 'c') = %s", la));
+
+        // mapM :: (a -> m b) -> [a] -> m [b]
+        // toUpper = (c -> c >= 'a' && c <= 'z' ? Just(c.toUpper()) : Nothing)
+        // mapM toUpper ['a', 'b', 'c'] = Just ['A', 'B', 'C']
+        // mapM toUpper ['1', 'b', 'c'] = Nothing
     }
 }
